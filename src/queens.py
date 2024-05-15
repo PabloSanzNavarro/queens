@@ -1,37 +1,33 @@
-def main():
-    solutions = []
-    for i in range(8):
-        for j in range(8):
-            for k in range(8):
-                for l in range(8):
-                    for m in range(8):
-                        for n in range(8):
-                            for o in range(8):
-                                for p in range(8):
-                                    if not check_columns(i, j, k, l, m, n, o, p):
-                                        continue
-                                    if not check_diagonals(i, j, k, l, m, n, o, p):
-                                        continue
-                                    solutions.append([i, j, k, l, m, n, o, p])
+import itertools
 
-    return solutions
+def main(n):
+    for i in range(1, n + 1):
+        combinations = list(itertools.product(range(i), repeat=i))
+        solutions = []
+        
+        for combination in combinations:
+            combination = list(combination)
+            if not check_columns(combination):
+                continue
+            if not check_diagonals(combination):
+                continue
+            solutions.append(combination)
+        print(f"n: {i}. Soluciones: {len(solutions)}")
 
-def check_columns(*args):
-    return len(args) == len(set(args))
+def check_columns(combination):
+    return len(combination) == len(set(combination))
 
-def check_diagonals(*args):
-    return check_upper_diagonals(*args) and check_lower_diagonals(*args)
+def check_diagonals(combination):
+    return check_upper_diagonals(combination) and check_lower_diagonals(combination)
 
-def check_upper_diagonals(*args):
-    adjusted_values = [args[i] + i for i in range(len(args))]
+def check_upper_diagonals(combination):
+    adjusted_values = [combination[i] + i for i in range(len(combination))]
     return len(adjusted_values) == len(set(adjusted_values))
 
-def check_lower_diagonals(*args):
-    adjusted_values = [args[i] - i for i in range(len(args))]
+def check_lower_diagonals(combination):
+    adjusted_values = [combination[i] - i for i in range(len(combination))]
     return len(adjusted_values) == len(set(adjusted_values))
 
 
 if __name__ == "__main__":
-    solutions = main()
-    for solution in solutions:
-        print(solution)
+    main(n=10)
