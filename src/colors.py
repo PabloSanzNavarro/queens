@@ -20,6 +20,5 @@ colors_dict = {
     "pink": PINK,
     "red": RED,
     "violet": VIOLET,
-    "grey": GREY
+    "grey": GREY,
 }
-

@@ -4,6 +4,7 @@ import pygame
 
 import colors
 
+
 class Square:
     def __init__(self, x, y, size, color, fill=None):
         self.x = x
@@ -30,25 +31,25 @@ def generate_squares(grid_size, square_size, solution):
             color = colors.WHITE
 
             fill = None
-            
+
             if solution[row] == column:
                 fill = "queen"
                 color = random.choice(queen_colors)
                 queen_colors.remove(color)
-            
+
             square = Square(x, y, square_size, color, fill)
-        
+
             square_row.append(square)
 
         squares.append(square_row)
 
     squares = fill_square_colors(squares)
-    
+
     return squares
 
 
 def fill_square_colors(squares):
-    
+
     non_filled = list()
     filled = list()
 
@@ -68,7 +69,7 @@ def fill_square_colors(squares):
         top = row_index + 1, column_index
         bottom = row_index - 1, column_index
         right = row_index, column_index + 1
-        left = row_index, column_index -1
+        left = row_index, column_index - 1
 
         if top in filled:
             neighbors.append(top)
@@ -84,8 +85,10 @@ def fill_square_colors(squares):
 
         new_color_row, new_color_column = random.choice(neighbors)
 
-        squares[row_index][column_index].color = squares[new_color_row][new_color_column].color
- 
+        squares[row_index][column_index].color = squares[new_color_row][
+            new_color_column
+        ].color
+
         non_filled.remove((row_index, column_index))
         filled.append((row_index, column_index))
 
@@ -94,5 +97,3 @@ def fill_square_colors(squares):
             square.fill = None
 
     return squares
-
-

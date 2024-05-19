@@ -57,10 +57,19 @@ def draw_borders(squares, screen, row_index, column_index, grid_size, square_siz
     else:
         left_width = BOARD_BORDER_WIDTH
 
-
     pygame.draw.line(screen, colors.BLACK, (x, y), (x + square_size, y), top_width)
-    pygame.draw.line(screen, colors.BLACK, (x, y + square_size), (x + square_size, y + square_size), bottom_width)
-    pygame.draw.line(screen, colors.BLACK, (x + square_size, y), (x + square_size, y + square_size), right_width)
+    pygame.draw.line(
+        screen,
+        colors.BLACK,
+        (x, y + square_size),
+        (x + square_size, y + square_size),
+        bottom_width,
+    )
+    pygame.draw.line(
+        screen,
+        colors.BLACK,
+        (x + square_size, y),
+        (x + square_size, y + square_size),
+        right_width,
+    )
     pygame.draw.line(screen, colors.BLACK, (x, y), (x, y + square_size), left_width)
-    
-            

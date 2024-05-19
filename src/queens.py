@@ -14,6 +14,7 @@ def get_solution():
 
     return random.choice(solutions)
 
+
 def check_diagonals(combination):
     for i in range(len(combination) - 1):
         if combination[i] == combination[i + 1] + 1:
