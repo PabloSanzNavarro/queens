@@ -1,9 +1,6 @@
-import random
-
 import pygame
 
-import colors
-
+import img
 
 class Square:
     def __init__(self, x, y, size, color, fill=None):
@@ -13,87 +10,54 @@ class Square:
         self.color = color
         self.fill = fill
 
+        queen_scale_factor = 1.5
+        queen = img.Image(file_name="queen.png", square_size=self.size, scale_factor=queen_scale_factor)
+        self.queen_img = queen.image
+        self.queen_rect = queen.rectangle
+
+        cross_scale_factor = 4
+        cross = img.Image(file_name="cross.png", square_size=self.size, scale_factor=cross_scale_factor)
+        self.cross_img = cross.image
+        self.cross_rect = cross.rectangle
+
+        self.centre_coords = (
+            self.x + (self.size // 2),
+            self.y + (self.size // 2)
+        )
+
     def draw(self, screen):
+        self.draw_color(screen)
+        self.draw_fill(screen)
+    
+    def draw_color(self, screen):
         rect = pygame.Rect(self.x, self.y, self.size, self.size)
         pygame.draw.rect(screen, self.color, rect)
 
+    def draw_fill(self, screen):
+        if not self.fill:
+            return
+        
+        if self.fill == "queen":
+            self.queen_rect.center = self.centre_coords
+            screen.blit(self.queen_img, self.queen_rect)
+        
+        if self.fill == "cross":
+            self.cross_rect.center = self.centre_coords
+            screen.blit(self.cross_img, self.cross_rect)
 
-def generate_squares(grid_size, square_size, solution):
-    squares = list()
-
-    queen_colors = list(colors.colors_dict.values())
-
-    for row in range(grid_size):
-        square_row = []
-        for column in range(grid_size):
-            x = column * square_size
-            y = row * square_size
-            color = colors.WHITE
-
-            fill = None
-
-            if solution[row] == column:
-                fill = "queen"
-                color = random.choice(queen_colors)
-                queen_colors.remove(color)
-
-            square = Square(x, y, square_size, color, fill)
-
-            square_row.append(square)
-
-        squares.append(square_row)
-
-    squares = fill_square_colors(squares)
-
-    return squares
-
-
-def fill_square_colors(squares):
-
-    non_filled = list()
-    filled = list()
-
-    for row_index, row in enumerate(squares):
-        for column_index, column in enumerate(row):
-            square = squares[row_index][column_index]
-
-            if square.fill == "queen":
-                filled.append((row_index, column_index))
+    def collidepoint(self, point):
+        rect = pygame.Rect(self.x, self.y, self.size, self.size)
+        return rect.collidepoint(point)
+    
+    def update_fill(self, mouse_button):
+        if mouse_button == 1: # Right click
+            if self.fill != "queen":
+                self.fill = "queen"
             else:
-                non_filled.append((row_index, column_index))
+                self.fill = None
 
-    while non_filled:
-        neighbors = list()
-        row_index, column_index = random.choice(non_filled)
-
-        top = row_index + 1, column_index
-        bottom = row_index - 1, column_index
-        right = row_index, column_index + 1
-        left = row_index, column_index - 1
-
-        if top in filled:
-            neighbors.append(top)
-        if bottom in filled:
-            neighbors.append(bottom)
-        if right in filled:
-            neighbors.append(right)
-        if left in filled:
-            neighbors.append(left)
-
-        if not neighbors:
-            continue
-
-        new_color_row, new_color_column = random.choice(neighbors)
-
-        squares[row_index][column_index].color = squares[new_color_row][
-            new_color_column
-        ].color
-
-        non_filled.remove((row_index, column_index))
-        filled.append((row_index, column_index))
-
-    for row in squares:
-        for square in row:
-            square.fill = None
-
-    return squares
+        if mouse_button == 3: # Left click
+            if self.fill != "cross":
+                self.fill = "cross"
+            else:
+                self.fill = None
